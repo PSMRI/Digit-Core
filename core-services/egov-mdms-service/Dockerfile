@@ -1,10 +1,11 @@
 # Use a base image with JDK
-FROM openjdk:17-jdk-slim AS builder
+FROM openjdk:17-jdk-alpine AS builder
 
 # Set the working directory inside the container
 WORKDIR /app
 
-RUN apt-get update && apt-get install -y maven
+# Install Maven and clean up
+RUN apk add --no-cache maven
 
 # Copy only the Maven configuration files first (for caching)
 COPY pom.xml ./
@@ -18,12 +19,11 @@ COPY ./ ./
 # Build the application (skip tests for faster builds if needed)
 RUN mvn clean package
 
-FROM openjdk:17-jdk-slim
+# Final stage
+FROM eclipse-temurin:17-jre-alpine
 
 # Set the working directory inside the container
 WORKDIR /app
-
-RUN apt-get update && apt-get install -y maven
 
 # Copy the Spring Boot JAR file from the builder stage
 COPY --from=builder /app/target/*.jar app.jar
