@@ -1,0 +1,5 @@
+services:
+  your-app:
+    image: egov-localization
+    ports:
+      - "8087:8087"
