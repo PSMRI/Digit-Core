@@ -1,0 +1,5 @@
+services:
+  your-app:
+    image: egov-otp
+    ports:
+      - "8089:8089"
