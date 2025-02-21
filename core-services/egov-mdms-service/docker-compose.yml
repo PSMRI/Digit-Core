@@ -2,7 +2,7 @@ services:
   your-app:
     image: egov-mdms-service
     volumes:
-      - /Users/chandan/Projects/mdms-data/data:/app/data
+      - /Users/nilesh/work/Piramal/codebase/PSMRI/mdms-data/data:/app/data
     environment:
       - egov.mdms.conf.path=/app/data
     ports:

@@ -1,11 +1,11 @@
 # Use a base image with JDK
-FROM openjdk:17-jdk-alpine AS builder
+FROM openjdk:17-jdk-slim AS builder
 
 # Set the working directory inside the container
 WORKDIR /app
 
 # Install Maven and clean up
-RUN apk add --no-cache maven
+RUN apt-get update && apt-get install -y maven
 
 # Copy only the Maven configuration files first (for caching)
 COPY pom.xml ./
@@ -20,7 +20,7 @@ COPY ./ ./
 RUN mvn clean package
 
 # Final stage
-FROM eclipse-temurin:17-jre-alpine
+FROM openjdk:17-jdk-slim
 
 # Set the working directory inside the container
 WORKDIR /app

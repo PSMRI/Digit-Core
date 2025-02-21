@@ -1,6 +1,13 @@
 #
 services:
-  your-app:
-    image: egov-otp
-    ports:
-      - "8089:8089"
+  maven-build:
+    volumes:
+      - /Users/nileshs/.m2:/root/.m2  # Mount your local Maven cache to the container
+    build:
+      args:
+        MAVEN_CACHE: "/Users/nilesh/.m2/repository"
+      context: .  # Path to the directory where the Dockerfile is located (typically the current directory)
+      dockerfile: Dockerfile  # Name of the Dockerfile (default is 'Dockerfile')
+      # - .:/app           # Mount your project files into the container
+    working_dir: /app     # Set the working directory inside the container
+    # command: mvn clean install  # Command to run when the container starts

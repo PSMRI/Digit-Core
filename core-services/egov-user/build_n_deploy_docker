@@ -1,2 +1,4 @@
-docker build -t egov-user:sukrtya .
+docker build -t egov-user .
+
+docker run -d -p 8081:8081 --name egov-user-container egov-user
 

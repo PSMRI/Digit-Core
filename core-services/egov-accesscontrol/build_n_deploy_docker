@@ -1,0 +1,3 @@
+docker build -t egov-accesscontrol:sukrtya .
+
+docker run -d -p 8280:8280 --name egov-accesscontrol-service-sukrtya-container egov-accesscontrol:sukrtya

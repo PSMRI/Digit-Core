@@ -16,7 +16,7 @@ RUN mvn dependency:go-offline -B
 COPY ./ ./
 
 # Build the application (skip tests for faster builds if needed)
-RUN mvn clean package
+RUN mvn clean package -DskipTests
 
 FROM openjdk:8-slim
 
