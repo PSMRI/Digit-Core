@@ -26,6 +26,8 @@ services:
   postgres:
     image: postgres:latest
     container_name: my-postgres
+    depends_on:
+      - kafka-1
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
@@ -42,12 +44,71 @@ services:
     build:
       context: ./egov-otp
       args:
-        APP_PORT: 8089 
+        APP_PORT: ${EGOV_OTP_PORT} 
+    depends_on:
+      - postgres    
     ports:
-      - "8089:8089"
+      - "${EGOV_OTP_PORT}:${EGOV_OTP_PORT}"
     # environment:
     #   - APP_ENV=production
-
+  egov-accesscontrol:
+    build:
+      context: ./egov-accesscontrol
+      args:
+        APP_PORT: ${EGOV_ACCESSCONTROL_PORT} 
+    depends_on:
+      - egov-otp
+    ports:
+      - "${EGOV_ACCESSCONTROL_PORT}:${EGOV_ACCESSCONTROL_PORT}"
+  egov-filestore:
+    build:
+      context: ./egov-filestore
+      args:
+        APP_PORT: ${EGOV_FILESTORE_PORT} 
+    depends_on:
+      - egov-accesscontrol
+    ports:
+      - "${EGOV_FILESTORE_PORT}:${EGOV_FILESTORE_PORT}"
+  egov-mdms-service:
+    build:
+      context: ./egov-mdms-service
+      args:
+        APP_PORT: ${EGOV_MDMS_SERVICE_PORT} 
+    depends_on:
+      - egov-filestore
+    volumes:
+      - ${MDMS_DATA_FOLDER}:/app/data
+    environment:
+      - egov.mdms.conf.path=/app/data
+    ports:
+      - "${EGOV_MDMS_SERVICE_PORT}:${EGOV_MDMS_SERVICE_PORT}"
+  egov-enc-service:
+    build:
+      context: ./egov-enc-service
+      args:
+        APP_PORT: ${EGOV_ENC_SERVICE_PORT} 
+    depends_on:
+      - egov-mdms-service
+    ports:
+      - "${EGOV_ENC_SERVICE_PORT}:${EGOV_ENC_SERVICE_PORT}"
+  egov-localization:
+    build:
+      context: ./egov-localization
+      args:
+        APP_PORT: ${EGOV_LOCALIZATION_PORT} 
+    depends_on:
+      - egov-enc-service
+    ports:
+      - "${EGOV_LOCALIZATION_PORT}:${EGOV_LOCALIZATION_PORT}"
+  egov-user:
+    build:
+      context: ./egov-user
+      args:
+        APP_PORT: ${EGOV_USER_PORT} 
+    depends_on:
+      - egov-localization
+    ports:
+      - "${EGOV_USER_PORT}:${EGOV_USER_PORT}"
 
 # Named volume for persisting PostgreSQL data
 volumes:
@@ -57,28 +118,3 @@ volumes:
 networks:
   mynetwork:
     driver: bridge
-
-# services:
-#   service1:
-#     build:
-#       context: ./service1
-#     ports:
-#       - "8081:8080"
-#     networks:
-#       - mynetwork
-
-#   service2:
-#     build:
-#       context: ./service2
-#     ports:
-#       - "8082:8080"
-#     networks:
-#       - mynetwork
-
-#   service3:
-#     build:
-#       context: ./service3
-#     ports:
-#       - "8083:8080"
-#     networks:
-#       - mynetwork

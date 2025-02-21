@@ -22,6 +22,12 @@ RUN mvn clean package
 # Final stage
 FROM openjdk:17-jdk-slim
 
+# Define an argument that can be passed at build time
+ARG APP_PORT
+
+# Set a default value for the argument if it's not provided
+ENV PORT=${APP_PORT:-8280}
+
 # Set the working directory inside the container
 WORKDIR /app
 
@@ -29,7 +35,7 @@ WORKDIR /app
 COPY --from=builder /app/target/*.jar app.jar
 
 # Expose the port your Spring Boot app runs on
-EXPOSE 8280
+EXPOSE $PORT
 
 # Command to run the application
 ENTRYPOINT ["java", "-jar", "app.jar"]

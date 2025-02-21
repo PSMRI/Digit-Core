@@ -1,0 +1,1 @@
+docker compose -f egov-user-docker-compose.yml up --build -d

@@ -23,13 +23,17 @@ FROM openjdk:8-slim
 # Set the working directory inside the container
 WORKDIR /app
 
-RUN apt-get update && apt-get install -y maven
+# Define an argument that can be passed at build time
+ARG APP_PORT
+
+# Set a default value for the argument if it's not provided
+ENV PORT=${APP_PORT:-8081}
 
 # Copy the Spring Boot JAR file from the builder stage
 COPY --from=builder /app/target/*.jar app.jar
 
 # Expose the port your Spring Boot app runs on
-EXPOSE 8081
+EXPOSE $PORT
 
 # Command to run the application
 ENTRYPOINT ["java", "-jar", "app.jar"]
