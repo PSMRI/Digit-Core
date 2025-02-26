@@ -33,7 +33,7 @@ services:
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
-      POSTGRES_DB: DIGITDB
+      POSTGRES_DB: ${DB_NAME}
     ports:
       - "5432:5432"  # Exposing port 5432 for database access
     volumes:
