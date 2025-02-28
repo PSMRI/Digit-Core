@@ -1,10 +1,10 @@
+ARG JDK_IMAGE
+
 # Use a base image with JDK
-FROM openjdk:8-slim AS builder
+FROM ${JDK_IMAGE} AS builder
 
 # Set the working directory inside the container
 WORKDIR /app
-
-RUN apt-get update && apt-get install -y maven
 
 # Copy only the Maven configuration files first (for caching)
 COPY pom.xml ./
@@ -18,7 +18,7 @@ COPY ./ ./
 # Build the application (skip tests for faster builds if needed)
 RUN mvn clean package -DskipTests
 
-FROM openjdk:8-slim
+FROM ${JDK_IMAGE}
 
 # Set the working directory inside the container
 WORKDIR /app

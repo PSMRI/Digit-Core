@@ -1,3 +1,3 @@
-docker build -t egov-otp:sukrtya .
+docker build --platform linux/amd64,linux/arm64 -t egov-otp:sukrtya .
 
 docker run -d -p 8089:8089 --name egov-otp-service-sukrtya-container egov-otp:sukrtya

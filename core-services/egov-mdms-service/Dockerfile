@@ -1,11 +1,13 @@
+ARG JDK_IMAGE
+
 # Use a base image with JDK
-FROM openjdk:17-jdk-slim AS builder
+FROM ${JDK_IMAGE} AS builder
 
 # Set the working directory inside the container
 WORKDIR /app
 
 # Install Maven and clean up
-RUN apt-get update && apt-get install -y maven
+# RUN dnf install -y maven
 
 # Copy only the Maven configuration files first (for caching)
 COPY pom.xml ./
@@ -20,7 +22,7 @@ COPY ./ ./
 RUN mvn clean package
 
 # Final stage
-FROM openjdk:17-jdk-slim
+FROM ${JDK_IMAGE}
 
 # Define an argument that can be passed at build time
 ARG APP_PORT
