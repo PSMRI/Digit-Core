@@ -1,0 +1,30 @@
+#!/bin/bash
+
+# Ensure an argument is provided
+if [ -z "$1" ]; then
+  echo "Usage: $0 {arm64|amd64}"
+  exit 1
+fi
+
+ARCH=$1
+
+# Define a variable
+BUILDER_NAME=sukrtya-builder
+
+docker buildx create --name $BUILDER_NAME --use
+export DOCKER_BUILDKIT=1
+
+if [ "$ARCH" = "arm64" ]; then
+  docker compose -f docker-compose-arm.yml build --builder $BUILDER_NAME
+elif [ "$ARCH" = "amd64" ]; then
+  docker compose -f docker-compose-amd.yml build --builder $BUILDER_NAME
+else
+  echo "Unknown architecture: $ARCH"
+  exit 1
+fi
+
+export DOCKER_BUILDKIT=0
+docker buildx rm $BUILDER_NAME
+
+# docker buildx build --platform linux/arm64 -t sukrtya-alpine-17-mvn-arm64 . --load
+# docker buildx build --platform linux/amd64 -t sukrtya-alpine-17-mvn-amd64 . --load
