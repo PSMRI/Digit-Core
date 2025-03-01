@@ -1,12 +1,8 @@
 #!/bin/bash
 
-# Ensure an argument is provided
-if [ -z "$1" ]; then
-  echo "Usage: $0 {arm64|amd64}"
-  exit 1
-fi
+ARCH=$(uname -m)
 
-ARCH=$1
+echo "The underlying architecure found to be: $ARCH"
 
 # Define a variable
 BUILDER_NAME=sukrtya-builder
