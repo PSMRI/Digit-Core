@@ -2,7 +2,7 @@
 
 ## Building the base Image (mostly for *inux based systems)
 - go to directory `Digit-Core/core-services/docker/base-image`
-- execute `./build_base_image` the script will detect the underlying architecture and build the architecture specific image.
+- execute `./build_base_image {arm64|amd64} (either arm64 or amd64)` and build the architecture specific image.
   
 ## Building and running the egov-user and dependent services.
 - go to directory `Digit-Core/core-services/docker`

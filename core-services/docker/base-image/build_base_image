@@ -1,6 +1,12 @@
 #!/bin/bash
 
-ARCH=$(uname -m)
+# Ensure an argument is provided
+if [ -z "$1" ]; then
+  echo "Usage: $0 {arm64|amd64}"
+  exit 1
+fi
+ 
+ARCH=$1
 
 echo "The underlying architecure found to be: $ARCH"
 
